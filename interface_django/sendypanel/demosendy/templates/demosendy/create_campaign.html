@@ -1,0 +1,265 @@
+{%extends 'demosendy/base.html'%}
+{%block title%}Campaign{%endblock%}
+{%block content%}
+<div class="d-flex flex-column flex-column-fluid">
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid h-100">
+            <div class="card mb-5 mb-xxl-1 h-100">
+                <div class="card-header border-bottom-card px-4 py-3 min-h-auto p-0 align-items-center bg-header">
+                    <h3 class="card-title m-0 border-bottom-0 pt-0 ">
+                        <span class="fw-bold py-1 fs-2 text-text-gray-700">Create Email Campaigns</span>
+                    </h3>
+                </div>
+                
+                <div class="card-body card-compose p-0 pb-0 h-100 d-flex flex-column justify-content-between">
+                    <div class="row flex-column-reverse flex-lg-row">
+                        <div class="col-lg-12 px-3">
+                            <div class="form-Createtemplate mt-6">
+                                <!-- Input Fields Row -->
+                                <div class="row align-items-end">
+                                    <!-- Template Selection (First Form) -->
+                                    <div class="col-lg-4">
+                                        <form method="POST" action="{% url 'create_campaign' %}">
+                                            {% csrf_token %}
+                                            <div class="fv-row fv-plugins-icon-container">
+                                                <label for="template_type" class="form-label">
+                                                    Select Template<span class="text-danger">*</span>
+                                                </label>
+                                                <select name="template_id" id="template_type" 
+                                                    class="form-select form-select-lg" 
+                                                    onchange="this.form.submit()" data-control="select2" 
+                                                    data-placeholder="Template Type">
+                                                    <option value="">Select Template</option>
+                                                    {% for template in templates %}
+                                                        <option value="{{ template.template_id }}" 
+                                                            {% if selected_template_id == template.template_id %}selected{% endif %}>
+                                                            {{ template.template_name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                                <div class="invalid-feedback">Please select a template.</div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Campaign Name (Second Form) -->
+                                    <div class="col-lg-4">
+                                        <form method="POST" action="{% url 'create_campaign' %}" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="fv-row fv-plugins-icon-container">
+                                                <label for="campaign_name" class="form-label">
+                                                    Campaign Name<span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="campaign_name" 
+                                                    name="campaign_name" placeholder="Enter campaign name" required>
+                                                <div class="invalid-feedback">Please enter a campaign name.</div>
+                                            </div>
+                                    </div>
+
+                                    <!-- List Selection (Second Form) -->
+                                    <div class="col-lg-4">
+                                        <div class="fv-row fv-plugins-icon-container">
+                                            <label for="list_id" class="form-label">
+                                                Select List<span class="text-danger">*</span>
+                                            </label>
+                                            <select name="list_id" id="list_id" 
+                                                class="form-select form-select-lg" 
+                                                data-control="select2" data-placeholder="Select List" required>
+                                                <option value="">Select List</option>
+                                                {% for list in lists %}
+                                                    <option value="{{ list.encrypted_list_id }}">{{ list.list_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback">Please select a list.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional Form Inputs -->
+                                <div class="row mb-6">
+                                    <div class="col-lg-12">
+                                        <div class="mb-4">
+                                            <label for="templateContent" class="form-label px-1 text-black-light">
+                                                Template Message Content
+                                            </label>
+                                            <div class="col-lg-12 fv-row fv-plugins-icon-container">
+                                                <div class="mb-2">
+                                                    <button type="button" id="toggleSource" 
+                                                        class="btn btn-secondary mb-3" 
+                                                        {% if selected_template_id %}disabled{% endif %}>Source</button>
+                                                    <textarea class="form-control mb-3 h-auto" id="templateContent"  
+                                                        rows="9" data-kt-element="input" name="template_content" 
+                                                        placeholder="Type your message content" 
+                                                        {% if selected_template_id %}readonly{% endif %} required>
+                                                        {{ template_content|default:"" }}
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-6 justify-content-end">
+                                        <a href="#" id="previewButton" class="text-primary d-flex align-items-center cursor-pointer gap-2 fs-14 fw-bold">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" 
+                                                xmlns="http://www.w3.org/2000/svg"></svg> Preview
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- File Upload Section -->
+                                <div class="row mb-6">
+                                    <div class="col-lg-6">
+                                        <label for="file_upload" class="form-label px-1 text-black-light">
+                                            Image/File Upload<span class="text-danger">*</span>
+                                        </label>
+                                        <input type="file" class="form-control" id="file_upload" name="file_upload">
+                                        <div class="invalid-feedback">Please upload an image.</div>
+                                        <p class="mt-3 fs-9 text-danger">Maximum file size: 20 MB</p>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer-compose mt-4 d-flex align-items-center justify-content-center">
+                        <div class="d-flex gap-6">
+                            <a href="{% url 'all_campaigns' %}" 
+                                class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body justify-content-center h-40px fs-14 fw-bold gap-3 text-primary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary fs-base fw-bold">Submit Campaign</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+</style>
+<script>
+    {% comment %} document.addEventListener("DOMContentLoaded", function() {
+        const toggleSourceButton = document.getElementById("toggleSource");
+        const templateContentTextarea = document.getElementById("templateContent");
+        const previewButton = document.getElementById("previewButton");
+        const campaignNameInput = document.getElementById("campaign_name");
+        const templateContentTextarea = document.getElementById("template_content");
+        const templateSelect = document.getElementById("template_type");
+        const fileUploadInput = document.getElementById("file_upload");
+
+        const htmlTemplate = `<html>
+            <head>Sample Heading</head>
+            <p>This is a sample Template.</p>
+            <body>
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </body>
+            </html>`;
+        
+            let isPreviewMode = false;
+
+            toggleSourceButton.addEventListener("click", function() {
+                if (!isPreviewMode) {
+                    templateContentTextarea.value = templateContentTextarea.value.trim() === "" ? htmlTemplate : "";
+                }
+            });
+            const defaultHtmlContent = "<h1>Welcome to the Template</h1><p>This is a sample template content.</p>";
+            
+            previewButton.addEventListener("click", function() {
+                previewButton.addEventListener("click", function() {
+                    if (!isPreviewMode) {
+                        // Render preview
+                        const content = templateContentTextarea.value;
+                        const previewHtml = `<style>body { font-family: Arial, sans-serif; padding: 10px; }</style>${content}`;
+                        templateContentTextarea.value = previewHtml;
+                        templateContentTextarea.disabled = true;
+                        previewButton.textContent = "Edit";
+                    } else {
+                        // Switch back to edit mode
+                        const previewContent = templateContentTextarea.value;
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(previewContent, 'text/html');
+                        templateContentTextarea.value = doc.body.innerHTML.trim();
+                        templateContentTextarea.disabled = false;
+                        previewButton.textContent = "Preview";
+                    }
+                    isPreviewMode = !isPreviewMode;
+                });
+                
+            });
+
+    }) {% endcomment %}
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggleSourceButton = document.getElementById("toggleSource");
+        const templateContentTextarea = document.getElementById("templateContent");
+        const previewButton = document.getElementById("previewButton");
+    
+        const htmlTemplate = `<html>
+            <head>Sample Heading</head>
+            <p>This is a sample Template.</p>
+            <body>
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </body>
+            </html>`;
+        
+        let isPreviewMode = false;
+    
+        toggleSourceButton.addEventListener("click", function() {
+            if (!isPreviewMode) {
+                templateContentTextarea.value = templateContentTextarea.value.trim() === "" ? htmlTemplate : "";
+            }
+        });
+    
+        previewButton.addEventListener("click", function() {
+            const content = templateContentTextarea.value;
+            
+            const previewWindow = window.open('', 'Preview', 'width=800,height=600');
+            
+            previewWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Preview</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 10px; }
+                        </style>
+                    </head>
+                    <body>${content}</body>
+                </html>
+            `);
+            
+            previewWindow.document.close();  
+            previewWindow.focus();  
+        });
+    });
+        
+
+</script>
+
+{%endblock%}

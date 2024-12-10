@@ -1,0 +1,248 @@
+{%extends 'demosendy/base.html'%}
+{%block title%}List{%endblock%}
+{%block content%}
+{% comment %} <div class="container mt-3">
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class="btn btn-primary">Campign Add</button>
+            </form>
+        </div>
+    </div>
+</div> {% endcomment %}
+<div class="d-flex flex-column flex-column-fluid">
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid h-100">
+            <div class="card mb-5 mb-xxl-1 h-100">
+                <div
+                    class="card-header border-bottom-card px-4 py-3 min-h-auto p-0 align-items-center bg-header">
+                    <h3 class="card-title m-0 border-bottom-0 pt-0 ">
+                        <span class="fw-bold py-1 fs-2 text-text-gray-700">List Create</span>
+                    </h3>
+                </div>
+                <div
+                    class="card-body card-compose p-0 pb-0 h-100 d-flex flex-column justify-content-between">
+                    <div class="row flex-column-reverse  flex-lg-row ">
+                        <div class="col-lg-12 px-3">
+                            <div class="form-Createtemplate mt-6">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <!--begin::Col-->
+                                    <div class="col-lg-4 fv-row fv-plugins-icon-container">
+                                        <div class="mb-6">
+                                            <label for="exampleFormControlInput1"
+                                                class=" form-label">List Name
+                                                <span class="text-danger">*</span>
+                                                <span data-bs-toggle="popover"
+                                                    data-bs-dismiss="true"
+                                                    title="Dismissable popover"
+                                                    data-bs-content="And here's some amazing content. It's very engaging. Right?">
+                                                    <svg width="16px" height="16px"
+                                                        viewBox="0 0 20 20"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none">
+                                                        <path fill="#000000" fill-rule="evenodd"
+                                                            d="M10 3a7 7 0 100 14 7 7 0 000-14zm-9 7a9 9 0 1118 0 9 9 0 01-18 0zm8-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm.01 8a1 1 0 102 0V9a1 1 0 10-2 0v5z" />
+                                                    </svg>
+                                                </span>
+                                            </label>
+                                            <input type="email" class="form-control form-control"
+                                                placeholder="Lorem ipsum dolor sit amet consectetur eges">
+                                        </div>
+                                    </div>
+                                    <!--end::Col-->
+                                    <!--begin::Col-->
+                                    
+                                    <!--end::Col-->
+                                    <!--begin::Col-->
+                                    
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Row-->
+
+
+                                <!--begin::Row-->
+                                <div class="row mb-6">
+                                    <!--begin::Col-->
+                                    <div class="col-lg-12">
+                                        <div class="mb-4">
+                                            <label for="exampleFormControlInput1"
+                                                class="form-label  px-1 text-black-light">Template
+                                                Message Content
+                                            </label>
+                                            <div class="col-lg-12 fv-row fv-plugins-icon-container">
+                                                <div class="mb-2">
+                                                    <div id="editor">
+                                                        <p>Type Your message or choose from templates</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <textarea class="form-control  mb-3 h-auto " rows="4"
+                                                data-kt-element="input"
+                                                placeholder="Type your message content"></textarea>
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <div class="d-flex gap-6 justify-content-end">
+                                        <a href="#"
+                                            class="text-primary d-flex align-items-center cursor-pointer gap-2 fs-14 fw-bold">
+                                            <svg width="20" height="20" viewBox="0 0 20 20"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                
+                                            </svg> Preview</a>
+
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+
+                                <!--begin::Row-->
+                                <div class="row mb-6">
+                                    <div class="col-lg-6">
+                                        <label for="exampleFormControlInput1"
+                                            class="form-label  px-1 text-black-light">Image Upload
+                                            <span class="text-danger">*</span></label>
+
+                                        <form class="form form-control px-1 py-0" action="#"
+                                            method="post">
+                                            <!--begin::Input group-->
+                                            <div class="form-group  d-flex justify-content-between">
+                                                <!--begin::Label-->
+                                                <label
+                                                    class=" col-form-label text-lg-right fs-base text-gray-dark ps-3">No
+                                                    File
+                                                    chosen</label>
+                                                <!--end::fLabel-->
+
+                                                <!--begin::Col-->
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center">
+                                                    <!--begin::Dropzone-->
+                                                    <div class="dropzone dropzone-queue "
+                                                        id="kt_dropzonejs_example_3">
+                                                        <!--begin::Controls-->
+                                                        <div class="dropzone-panel mb-lg-0 ">
+                                                            <a
+                                                                class="dropzone-select btn btn-sm btn-primary ">Browse
+                                                                Files</a>
+                                                            <a
+                                                                class="dropzone-remove-all btn btn-sm btn-light-primary">Remove
+                                                                All</a>
+                                                        </div>
+                                                        <!--end::Controls-->
+
+                                                        <!--begin::Items-->
+                                                        <div class="dropzone-items wm-200px">
+                                                            <div class="dropzone-item"
+                                                                style="display:none">
+                                                                <!--begin::File-->
+                                                                <div class="dropzone-file">
+                                                                    <div class="dropzone-filename"
+                                                                        title="some_image_file_name.jpg">
+                                                                        <span
+                                                                            data-dz-name>some_image_file_name.jpg</span>
+                                                                        <strong>(<span
+                                                                                data-dz-size>340kb</span>)</strong>
+                                                                    </div>
+
+                                                                    <div class="dropzone-error"
+                                                                        data-dz-errormessage></div>
+                                                                </div>
+                                                                <!--end::File-->
+
+                                                                <!--begin::Progress-->
+                                                                <div class="dropzone-progress">
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-primary"
+                                                                            role="progressbar"
+                                                                            aria-valuemin="0"
+                                                                            aria-valuemax="100"
+                                                                            aria-valuenow="0"
+                                                                            data-dz-uploadprogress>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!--end::Progress-->
+
+                                                                <!--begin::Toolbar-->
+                                                                <div class="dropzone-toolbar">
+                                                                    <span class="dropzone-delete"
+                                                                        data-dz-remove><i
+                                                                            class="bi bi-x fs-1"></i></span>
+                                                                </div>
+                                                                <!--end::Toolbar-->
+                                                            </div>
+                                                        </div>
+                                                        <!--end::Items-->
+                                                    </div>
+                                                    <!--end::Dropzone-->
+
+
+                                                </div>
+                                                <!--end::Col-->
+                                            </div>
+                                            <!--end::Input group-->
+                                        </form>
+                                        <p class="mt-3 fs-9 text-danger">Upload Attachement: (Get
+                                            sample:
+                                            Pdf file after
+                                            selecting the template name) Maximum file size : 20 MB
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--End::Row-->
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="card-footer-compose mt-4 d-flex align-items-center justify-content-center">
+                        <div class="d-flex gap-6">
+                            <a href="#"
+                                class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body  justify-content-center h-40px fs-14 fw-bold gap-3 text-primary"
+                                data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
+                                Cancel
+                            </a>
+                            <a href="#" class="btn btn-primary fs-base fw-fw-bold">Submit
+                                Campaign</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Content container-->
+    </div>
+    <!--end::Content-->
+</div>
+<!--end::Content wrapper-->
+<!--begin::Footer-->
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+</style>
+
+{%endblock%}

@@ -1,0 +1,235 @@
+
+{% extends 'demosendy/base.html' %}
+{% block title %}API consumption{% endblock %}
+{% block content %}
+{% load static %}
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-fluid">
+                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-2 w-100 mb-6">
+                    <div class="page-title d-flex flex-column justify-content-center gap-1 me-3"></div>    
+                </div>
+                
+                <div class="card mb-5 mb-xl-8">
+                    <div class="card-header flex-wrap table-header py-2 min-h-auto px-4 align-items-center p-0">
+                        <h3 class="mb-3 mb-lg-0 align-items-start flex-column">
+                            <span class="card-label fw-bold fs-5 text-black">Instructions for API Usage</span>
+                        </h3>
+                        <div class="d-flex justify-content-end mb-4">
+                            <a href="../media/campaign_files/Email_JSON_API_And_Panel_Documentation.pdf" class="btn btn-primary" download>Download PDF</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                     
+                        <h4>1. Overview</h4>
+                        <p>This technical document is intended for developers who wish to use the Email API for sending messages, and describes the various programming methods and commands used by developers when using this API.</p>
+
+                        <h4>2. Introduction</h4>
+                        <p>This is one of the simpler server-based forms of communication to our gateway. We recommend POST for data transfer in JSON format only. Communication to our API can be done via HTTP on port 80. The parameter names are case-sensitive.</p>
+
+                       
+                        <h4>3. Getting Started</h4>
+                        <p>JSON payload needs to be structured according to the standards; otherwise, the API will not accept them for processing.</p>
+
+                        <strong>API Endpoint:</strong> <code>http://xxxx.xxx.xxx/sendemail</code>
+
+                        <strong>JSON Payload Structure:</strong>
+                        <pre>
+{
+    "brand_id": "xxxxxxx", 
+    "list_id": "xxx", 
+    "campaign_id": "xxxx@xxx", 
+    "emaildata": [
+        {
+            "name": "abc",
+            "email": "xxxx@gmail.com"
+        },
+        {
+            "name": "xyz",
+            "email": "xyz@gmail.com"
+        }
+    ]
+}
+                        </pre>
+
+                        
+                        <h4>Authentication</h4>
+                        <p>In order to access and send email using this API, an "Access Token" is essential, which will be provided to the user during dedicated account creation. This provided "Access Token" has to be passed as a Bearer Token while calling this API, like below:</p>
+
+                        <ul>
+                            <li><strong>Content-Type:</strong> Set this to <code>application/json</code>.</li>
+                            <li><strong>Authorization:</strong> Use the format <code>Bearer &lt;token&gt;</code>, replacing <code>&lt;token&gt;</code> with your respective token. For example, <code>Bearer xxxxxxxxxxxxxxxxxxxx</code>.</li>
+                        </ul><br>
+
+                      
+                        <img src="{%static 'assets/media/logos/token.jpg' %}" alt="API Authentication Example" style="display: block; margin: auto; width: 900px; height: auto;">
+
+                       
+                        <h5>Pass the JSON body:</h5>
+                        <p>Pass the JSON body, which should include list_id, brand_id, and campaign_id (these are created in the Email Dashboard, refer to the screenshots below). In the emaildata body, the email field is mandatory, while the name is optional. The age and phone_number fields are custom fields you created in the Email Dashboard tool for this list. Ensure you pass the custom fields in the same order as they were created in the Email Dashboard.</p>
+
+                       
+                        <img src="{%static 'assets/media/logos/json_body.jpg' %}" alt="Email Body Construction Example" style="display: block; margin: auto; width: 900px; height: auto;"><br><br>
+
+                    
+                        <p>After constructing the Email Body as per the standards mentioned above, call our API from your system with all the required parameters and their respective values accordingly. On successful execution without any error/issue, the API will respond back with the email and MID along with a response in JSON format like below:</p>
+{% comment %} 
+                        <pre>
+{
+    "email": "xxxx@gmail.com", 
+    "mid": "123456789"
+}
+                        </pre> {% endcomment %}
+                        <p>Note: MID is our service’s internal message reference identifier for every valid transaction.</p>
+
+                        
+                        <img src="{%static 'assets/media/logos/mids.png' %}" alt="API Response Example" style="display: block; margin: auto; width: 900px; height: auto;"><br><br>
+
+                    
+                        <h5>Error Handling:</h5>
+
+                        <p>If you use the GET method, you will receive an error.</p>
+                       
+                        <img src="{%static 'assets/media/logos/get_error.jpg' %}" alt="GET Method Error Example" style="display: block; margin: auto; width: 900px; height: auto;"><br><br>
+
+                        <p>If you do not pass the JSON body, you will receive an error.</p>
+                        
+                        <img src="{%static 'assets/media/logos/empty_json.png' %}" alt="Missing JSON Body Error Example" style="display: block; margin: auto; width: 900px; height: auto;"><br>
+
+                        <p>If you do not pass the Authorization header, you will receive an error.</p><br>
+                        
+                        <img src="{%static 'assets/media/logos/auth_error.png' %}" alt="Missing Authorization Error Example" style="display: block; margin: auto; width: 900px; height: auto;"><br><br>
+
+                        <h5>NOTE:</h5>
+                        <ul>
+                            <li>If a new campaign (new template) is created, a new list must also be created.</li>
+                            <li>For duplicate campaigns (already executed), attachments will not work. To include an attachment, a new campaign must be created.</li>
+                        </ul><br>
+                        <h4>JSON PARAMETERS</h4>
+                        <table class="json-parameters-table">
+                            <thead>
+                                <tr>
+                                    <th>PARAMETER</th>
+                                    <th>REQUIRED?</th>
+                                    <th>DESCRIPTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Brand_id</td>
+                                    <td>YES</td>
+                                    <td>Email Dashboard brand_id</td>
+                                </tr>
+                                <tr>
+                                    <td>Campaign_id</td>
+                                    <td>YES</td>
+                                    <td>Campaign_id</td>
+                                </tr>
+                                <tr>
+                                    <td>List_id</td>
+                                    <td>YES</td>
+                                    <td>List_id</td>
+                                </tr>
+                                <tr>
+                                    <td>emaildata</td>
+                                    <td>YES</td>
+                                    <td>Receiver details</td>
+                                </tr>
+                                <tr>
+                                    <td>email</td>
+                                    <td>YES</td>
+                                    <td>Receiver’s Email address</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>OPTIONAL</td>
+                                    <td>Name of receiver</td>
+                                </tr>
+                                <tr>
+                                    <td>Custom fields</td>
+                                    <td>YES</td>
+                                    <td>If you have created in Email Dashboard</td>
+                                </tr>
+                            </tbody>
+                        </table><br>
+                        <h4>ERROR RESPONSE</h4>
+                        <table class="json-parameters-table">
+                            <thead>
+                                <tr>
+                                    <th>PARAMETER</th>
+                                    <th>MISSED?</th>
+                                    <th>RESPONSE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Brand_id</td>
+                                    <td>YES</td>
+                                    <td>Brand ID missing</td>
+                                </tr>
+                                <tr>
+                                    <td>Campaign_id</td>
+                                    <td>YES</td>
+                                    <td>Campaign ID missing</td>
+                                </tr>
+                                <tr>
+                                    <td>List_id</td>
+                                    <td>YES</td>
+                                    <td>List ID missing</td>
+                                </tr>
+                                <tr>
+                                    <td>emaildata</td>
+                                    <td>YES</td>
+                                    <td>Email Data missing</td>
+                                </tr>
+                                <tr>
+                                    <td>email</td>
+                                    <td>YES</td>
+                                    <td>missing or empty</td>
+                                </tr>
+                                <tr>
+                                    <td>Header (Authorization)</td>
+                                    <td>YES</td>
+                                    <td>Authorization header is missing</td>
+                                </tr>
+                                <tr>
+                                    <td>Incorrect email</td>
+                                    <td>YES</td>
+                                    <td>invalid to-address</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .json-parameters-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 16px;
+        text-align: left;
+    }
+    
+    .json-parameters-table th, 
+    .json-parameters-table td {
+        padding: 12px 15px;
+        border: 1px solid #dddddd;
+    }
+    
+    .json-parameters-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .json-parameters-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    
+</style>
+
+{% endblock %}

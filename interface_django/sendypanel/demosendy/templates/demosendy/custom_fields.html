@@ -1,0 +1,150 @@
+{% extends 'demosendy/base.html' %}
+{% block title %}Create Custom Fields{% endblock %}
+{% block content %}
+
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-fluid">
+                <div class="card mb-5 mb-xl-8">
+                    <div class="card-header py-2 px-4 pe-11 align-items-center p-0">
+                        <h3 class="mb-3 align-items-start flex-column">
+                            <span class="card-label fw-bold fs-5 text-black">Create Custom Fields</span>
+                        </h3>
+                    </div>
+                    <form id="addCustomFieldsForm" method="POST" action="{% url 'custom_fields' list_id %}">
+                        {% csrf_token %}
+                        <div id="customFieldsContainer">
+                            <div class="row p-4">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-4">
+                                    <label for="userInput">Field Name</label>
+                                    <input type="text" id="userInput" name="field_name" class="form-control" placeholder="Enter your field name">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="dataType">Select Data Type</label>
+                                    <select id="dataType" name="data_type" class="form-select">
+                                        <option value="">Select Data Type</option>
+                                        <option value="text">Text</option>
+                                        <option value="datetime">Datetime</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+                        </div>
+                    
+                        <div class="card-footer-compose mt-4 d-flex align-items-center justify-content-center">
+                            <button type="button" id="addMoreFieldsBtn" class="btn btn-secondary fs-base fw-bold">Add Custom Field</button>
+                            <button type="submit" class="btn btn-primary fs-base fw-bold ms-3">Submit</button>
+                        </div>
+                    </form>
+                    <div id="validationMessage" class="mt-3 text-center"></div>
+
+                    <div class="card-body p-0 mt-4">
+                        <div class="table-responsive min-h-350px">
+                            <table id="customFieldsTable" class="table table-bordered gy-5">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-muted">
+                                        <th class="min-w-100px">Field Name</th>
+                                        <th class="min-w-150px">Data Type</th>
+                                        <th class="min-w-150px">Cancel</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+<script>
+
+document.getElementById('addMoreFieldsBtn').addEventListener('click', function() {
+    const fieldName = document.getElementById('userInput').value;
+    const dataType = document.getElementById('dataType').value;
+    const validationMessage = document.getElementById('validationMessage');
+    
+
+    if (!fieldName || !dataType) {
+        validationMessage.innerHTML = '<span class="text-danger">Both field name and data type are required.</span>';
+        return;
+    }
+
+    const customFieldsContainer = document.getElementById('customFieldsContainer');
+    const hiddenFieldName = document.createElement('input');
+    hiddenFieldName.type = 'hidden';
+    hiddenFieldName.name = 'field_name[]';  
+    hiddenFieldName.value = fieldName;
+
+    const hiddenDataType = document.createElement('input');
+    hiddenDataType.type = 'hidden';
+    hiddenDataType.name = 'data_type[]';  
+    hiddenDataType.value = dataType;
+
+    const hiddenInputContainer = document.createElement('div');
+    hiddenInputContainer.classList.add('hidden-input-container');
+    hiddenInputContainer.appendChild(hiddenFieldName);
+    hiddenInputContainer.appendChild(hiddenDataType);
+    customFieldsContainer.appendChild(hiddenInputContainer);
+
+    const tableBody = document.querySelector('#customFieldsTable tbody');
+    const newRow = document.createElement('tr');
+    
+    newRow.innerHTML = `
+        <td>${fieldName}</td>
+        <td>${dataType}</td>
+        <td><button type="button" class="btn btn-sm btn-danger cancel-btn">Cancel</button></td>
+    `;
+
+    tableBody.appendChild(newRow);
+
+    document.getElementById('userInput').value = '';
+    document.getElementById('dataType').value = '';
+    validationMessage.innerHTML = '';
+
+    newRow.querySelector('.cancel-btn').addEventListener('click', function() {
+        newRow.remove();
+
+        hiddenInputContainer.remove();
+    });
+});
+
+document.getElementById('addCustomFieldsForm').addEventListener('submit', function(event) {
+
+    const hiddenFields = document.querySelectorAll('.hidden-input-container');
+    if (hiddenFields.length === 0) {
+        event.preventDefault();  
+        alert('Please add at least one custom field before submitting.');
+    }
+});
+</script>
+
+{% endblock %}

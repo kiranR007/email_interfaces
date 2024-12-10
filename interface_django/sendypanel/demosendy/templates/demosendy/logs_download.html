@@ -1,0 +1,181 @@
+{%extends 'demosendy/base.html'%}
+{%block title%}Campaign{%endblock%}
+{%block content%}
+
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-fluid">
+                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-2 w-100 mb-6"> 
+                    <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
+                    </div>
+                    
+                </div>
+                <div class="card mb-5 mb-xl-8">
+                    <div
+                        class="card-header flex-wrap table-header py-2 min-h-auto px-4 align-items-center  p-0">
+                        <h3 class="mb-3  mb-lg-0 align-items-start flex-column">
+                            <span class="card-label fw-bold fs-5 text-black">All Campaigns</span>
+                        </h3>
+                            <form method="GET" action="{% url 'logs_download' %}">
+                            <div
+                                class="custom-search d-flex flex-row-reverse align-items-center position-relative mb-3 mb-lg-0">
+                                <input id="customSearchBox" type="text" name="search"
+                                    data-kt-inbox-listing-filter="search"
+                                    class="form-control form-control-sm form-control min-h-auto pe-11 min-w-lg-400px"
+                                    placeholder="Search by Campaign Name">
+                                <i class="ki-outline ki-magnifier fs-3 position-absolute me-4"></i>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0 mt-4">
+                        <div class="table-responsive min-h-350px">
+                            <table id="kt_datatable_zero_configuration"
+                                class="table table-bordered  gy-5">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-muted">
+                                        <th class="min-w-100px">Campaign ID</th>
+                                        <th class="min-w-150px">Campaign Name</th>
+                                        <th class="min-w-100px">Date/Time</th>
+                                        <th class="min-w-100px">Download Logs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if filter_campaigns %}
+                                        {% for campaign in filter_campaigns %}
+                                            <tr>
+                                                <td>{{ campaign.campaign_id }}</td>
+                                                <td><a href="{% url 'campaign_details' campaign.campaign_id %}" class="fs-14 fw-bold text-primary">{{ campaign.title }}</a></td>
+                                                <td>{{ campaign.created_at }}</td>
+                                                <td>
+                                                    <a href="?download={{ campaign.campaign_id }}" class="btn btn-primary download-btn"><i class="bi bi-download"></i> Download Log</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}            
+                                    {%else%}
+                                        {%for campaign in page_obj%}
+                                            <tr>
+                                                <td>{{campaign.campaign_id}}</td>
+                                                <td><a href="{% url 'campaign_details' campaign.campaign_id %}" class="fs-14 fw-bold text-primary">{{campaign.title}}</a></td>
+                                                <td>{{campaign.created_at}}</td>
+                                                <td>
+                                                    <a href="?download={{ campaign.campaign_id }}" class="btn btn-primary download-btn"><i class="bi bi-download"></i>Download Log</a>
+                                                </td>
+                                            </tr> 
+                                        {%endfor%} 
+                                    {%endif%}         
+                              </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <ul class="pagination">
+                                    <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                                      <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                      </a>
+                                    </li>
+                                
+                                    {% for page_num in page_obj.paginator.page_range %}
+                                        {%if page_num >= page_obj.number|add:'-1' and page_num <= page_obj.number|add:'1'%}
+                                            <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                            </li>
+                                        {%endif%}
+                                    {% endfor %}
+                                    
+                                   
+                                    <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                                      <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                      </a>
+                                    </li>
+                                  </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+</style>
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const downloadButtons = document.querySelectorAll(".download-btn");
+    
+            downloadButtons.forEach(function(button) {
+                button.addEventListener("click", function(event) {
+                    event.preventDefault(); 
+    
+                    const campaignId = button.getAttribute("data-campaign-id");
+    
+     
+                    button.innerText = "Processing...";
+                    button.disabled = true;
+    
+
+                    fetch(`/logs-download/?download=${campaignId}`)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.blob(); 
+                            } else {
+                                throw new Error('Failed to download');
+                            }
+                        })
+                        .then(blob => {
+                            
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `campaign_${campaignId}_logs.csv`; 
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+    
+                   
+                            button.innerText = "Download Log";
+                            button.disabled = false; 
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            
+                            button.innerText = "Download Log";
+                            button.disabled = false;
+                        });
+                });
+            });
+        });
+
+    
+</script>
+
+{%endblock%}

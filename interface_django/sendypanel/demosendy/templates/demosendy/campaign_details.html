@@ -1,0 +1,117 @@
+{% extends 'demosendy/base.html' %}
+{% block title %}Campaign Details{% endblock %}
+{% block content %}
+
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-fluid">
+                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-2 w-100 mb-6">
+                    <div class="page-title d-flex flex-column justify-content-center gap-1 me-3"></div>    
+                </div>
+                
+                <!-- Card for Campaign Details -->
+                <div class="card mb-5 mb-xl-8">
+                    <div class="card-header flex-wrap table-header py-2 min-h-auto px-4 align-items-center p-0">
+                        <h3 class="mb-3 mb-lg-0 align-items-start flex-column">
+                            <span class="card-label fw-bold fs-5 text-black">Campaign Details</span>
+                        </h3>
+                    </div>
+
+                    <!-- Card Body with two columns -->
+                    <div class="card-body p-0 mt-4">
+                        <div class="row">
+                            
+                            <!-- Left Column: Campaign and List Details -->
+                            <div class="col-md-4">
+                                <div class="form-group mb-3 m-2">
+                                    <label for="campaignName" class="form-label">Campaign Name</label>
+                                    <input type="text" id="campaignName" class="form-control" value="{{ campaigns.title }}" readonly>
+                                </div>
+
+                                <div class="form-group mb-3 m-2">
+                                    <label for="listName" class="form-label">List Name</label>
+                                    <input type="text" id="listName" class="form-control" value="{{ list_name }}" readonly>
+                                </div>
+
+                                <div class="form-group mb-3 m-2">
+                                    <label for="createdAt" class="form-label">Created At</label>
+                                    <input type="text" id="createdAt" class="form-control" value="{{ campaigns.created_at }}" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Template Content Preview -->
+                            <!-- Right Column: Template Content Preview -->
+                            <!-- Right Column: Template Content Preview -->
+                            <!-- Right Column: Template Content Preview -->
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="templateContent" class="form-label">Template Preview</label>
+                                    
+                                    <!-- Iframe for HTML content preview -->
+                                    <iframe id="iframePreview" class="w-100 border rounded" height="400px"></iframe>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const iframe = document.getElementById('iframePreview');
+        const templateTextarea = document.getElementById('templateContent');
+
+        // Populate iframe on page load
+        var htmlContent = `{{ template_content|safe }}`;
+        updateIframe(htmlContent);
+
+        // Helper to update iframe content
+        function updateIframe(content) {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(content);
+            iframeDoc.close();
+        }
+
+        // Update iframe dynamically on text area input
+        if (templateTextarea) {
+            templateTextarea.addEventListener('input', function () {
+                updateIframe(this.value);
+            });
+        }
+    });
+</script>
+
+{% endblock %}

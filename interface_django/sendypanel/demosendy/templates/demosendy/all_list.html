@@ -1,0 +1,317 @@
+{%extends 'demosendy/base.html'%}
+{%block title%}Lists{%endblock%}
+{%block content%}
+
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-fluid">
+                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-2 w-100 mb-6">
+                    <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
+                    </div>
+                    <div class="d-flex btn-action flex-wrap align-items-center gap-2 gap-lg-3">
+                        <a id="createListButton" href="#"
+                            class="btn min-w-175px btn-flex btn-primary h-40px fs-14 fw-bold text-center justify-content-center ">
+                            <span class="me-2">
+                                <svg fill="#fff" height="20px" width="20px" version="1.1" id="Layer_1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"
+                                    xml:space="preserve">
+                                    <g>
+                                        <g>
+                                            <path d="M256,0C114.84,0,0,114.842,0,256s114.84,256,256,256s256-114.842,256-256S397.16,0,256,0z M256,462.452
+                                        c-113.837,0-206.452-92.614-206.452-206.452S142.163,49.548,256,49.548S462.452,142.163,462.452,256S369.837,462.452,256,462.452z
+                                        " />
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <polygon points="280.774,231.226 280.774,140.387 231.226,140.387 231.226,231.226 140.387,231.226 140.387,280.774 
+                                        231.226,280.774 231.226,371.613 280.774,371.613 280.774,280.774 371.613,280.774 371.613,231.226 		" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </span>
+                            Create a New
+                            List</a>
+                        
+                    </div>
+                </div>
+                <div id="inlineListForm" class="mt-4 mb-3" style="display: none;"> 
+                    <div class="row">
+                            <div class="col-md-6"></div>
+                            <div class="card col-md-6">
+                                <div class="card-body">
+                                    {% comment %} <form id="addListInlineForm" method="POST" action="{% url 'custom_fields' %}"> {% endcomment %}
+                                    <form id="addListInlineForm" method="POST">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="inlineListName" class="form-label">List Name</label>
+                                            <input type="text" class="form-control" name="list_name"  id="inlineListName" placeholder="The name of your new list" required>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            {% comment %} <a href="{% url 'custom_fields' %}"> </a>{% endcomment %}
+                                            <button type="submit" class="btn btn-primary me-2">Add</button>
+                                            <button type="button" id="cancelInlineForm" class="btn btn-secondary ">Cancel</button>
+                                            
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="card mb-5 mb-xl-8">
+                    <div
+                        class="card-header flex-wrap table-header py-2 min-h-auto px-4 align-items-center  p-0">
+                        <h3 class="mb-3  mb-lg-0 align-items-start flex-column">
+                            <span class="card-label fw-bold fs-5 text-black">All Lists</span>
+                        </h3>
+                        {% comment %} <div class="d-flex flex-wrap align-items-center gap-6">
+                            <div class="custom-sort d-flex">
+                                <label
+                                    class="fs-14 align-items-center d-flex text-black-light me-3">Sort
+                                    by</label>
+                                <div>
+                                    <select id="sortDropdown"
+                                        class="form-select form-select form-select-sm"
+                                        data-control="select2" data-hide-search="true">
+                                        <option value="desc">Newest to Oldest</option>
+                                        <option value="asc">Oldest to Newest</option>
+                                    </select>
+                                </div>
+                            </div> {% endcomment %}
+
+                            {% comment %} <div
+                                class="custom-search d-flex flex-row-reverse align-items-center position-relative mb-3 mb-lg-0">
+                                <input id="customSearchBox" type="text" name="search"
+                                    data-kt-inbox-listing-filter="search"
+                                    class="form-control form-control-sm form-control min-h-auto pe-11 min-w-lg-400px"
+                                    placeholder="Search by List Name">
+                                <i class="ki-outline ki-magnifier fs-3 position-absolute me-4"></i>
+                            </div> {% endcomment %}
+                            <form method="GET" action="{% url 'all_list' %}">
+                                <div
+                                    class="custom-search d-flex flex-row-reverse align-items-center position-relative mb-3 mb-lg-0">
+                                    <input id="customSearchBox" type="text" name="search"
+                                        data-kt-inbox-listing-filter="search"
+                                        class="form-control form-control-sm form-control min-h-auto pe-11 min-w-lg-400px"
+                                        placeholder="Search by List Name">
+                                    <i class="ki-outline ki-magnifier fs-3 position-absolute me-4"></i>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0 mt-4">
+                        <div class="table-responsive min-h-350px">
+                            <table id="kt_datatable_zero_configuration"
+                                class="table table-bordered  gy-5">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-muted">
+                                        {% comment %} <th class="text-center min-w-lg-60px min-w-60px">SL No</th> {% endcomment %}
+                                        <th class="min-w-100px">List ID</th>
+                                        <th class="min-w-150px">List Name</th>
+                                        {% comment %} <th class="min-w-100px">Preview</th>
+                                        <th class="min-w-100px">Category</th>
+                                        <th class="min-w-100px">Language</th> {% endcomment %}
+                                        <th class="min-w-100px">Date/Time</th>
+                                        {% comment %} <th class="min-w-150px">Edit</th> {% endcomment %}
+                                        <th class="min-w-100px">Delete</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%if filtered_list%}
+                                        {%for list in filtered_list%}
+                                        <tr>
+                                            <td>{{list.encrypted_list_id}}</td>
+                                            <td><a href="{% url 'list_details' list.encrypted_list_id %}" class="fs-14 fw-bold text-primary">{{list.list_name}}</a></td>
+                                            <td>{{list.created_at}}</td>
+                                            {% comment %} <td><i class="bi bi-pencil-square"></i></td> {% endcomment %}
+                                            {% comment %} <td><i class="bi bi-archive-fill"></i></td> {% endcomment %}
+                                            <!-- Redirect to delete page when clicked -->
+                                            {% comment %} <td>
+                                                <a href="{% url 'delete_list' list.encrypted_list_id %}" class="text-danger">
+                                                    <i class="bi bi-archive-fill"></i>
+                                                </a>
+                                            </td> {% endcomment %}
+                                            <td>
+                                                <a href="#" class="text-danger delete-btn" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal" data-list-id="{{ list.encrypted_list_id }}"
+                                                    data-list-name="{{ list.list_name }}">
+                                                    <i class="bi bi-archive-fill"></i>
+                                                </a>
+                                            </td>
+
+                                            <td></td>
+                                        </tr>
+                                        {%endfor%}
+                                    {%else%}
+                                        {%for list in lists%}
+                                        <tr>
+                                            <td>{{list.encrypted_list_id}}</td>
+                                            <td><a href="{% url 'list_details' list.encrypted_list_id %}" class="fs-14 fw-bold text-primary">{{list.list_name}}</a></td>
+                                            <td>{{list.created_at}}</td>
+                                            {% comment %} <td><i class="bi bi-pencil-square"></i></td> {% endcomment %}
+                                            {% comment %} <td><i class="bi bi-archive-fill"></i></td> {% endcomment %}
+                                            <!-- Redirect to delete page when clicked -->
+                                            {% comment %} <td>
+                                                <a href="{% url 'delete_list' list.encrypted_list_id %}" class="text-danger">
+                                                    <i class="bi bi-archive-fill"></i>
+                                                </a>
+                                            </td> {% endcomment %}
+                                            <td>
+                                                <a href="#" class="text-danger delete-btn" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal" data-list-id="{{ list.encrypted_list_id }}"
+                                                    data-list-name="{{ list.list_name }}">
+                                                    <i class="bi bi-archive-fill"></i>
+                                                </a>
+                                            </td>
+
+                                            <td></td>
+                                        </tr>
+                                        {%endfor%}
+                                    {%endif%}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                    
+                    <!--new code added-->
+                    {% comment %}{{page_obj}}
+                     Current page: {{page_obj.number}}
+                    Has Previous: {{page_obj.has_previous}}<br/>
+                    Has Next: {{page_obj.has_next}}
+                    number of pages: {{page_obj.paginator.num_pages}} {% endcomment %}
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <ul class="pagination">
+                                    <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                                      <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                      </a>
+                                    </li>
+                                
+                                    {% for page_num in page_obj.paginator.page_range %}
+                                        {%if page_num >= page_obj.number|add:'-1' and page_num <= page_obj.number|add:'1'%}
+                                            <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                            </li>
+                                        {%endif%}
+                                    {% endfor %}
+                                    
+                                   
+                                    <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                                      <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                      </a>
+                                    </li>
+                                  </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+
+                    {% comment %} {%if page_obj.has_previous%}
+                        <a href="?page=1">&laquo First</a>
+                        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+                    
+                    {%endif%}
+                    Page: {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+                    {% if page_obj.has_next%}
+                        <a href="?page={{page_obj.next_page_number}}">Next</a>
+                        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
+                    {%endif%} {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage">Are you sure you want to delete the list "<strong><span id="listName">{{list_name}}</span><strong>" ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                <form id="deleteForm" method="POST" action="{% url 'all_list' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="listIdInput" name="list_id">
+                    <input type="hidden" name="delete_list" value="true"> 
+                    <button type="submit" class="btn btn-danger">DELETE</button>
+                </form>  
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+</style>
+<script>
+    $(document).ready(function() {
+        $('#createListButton').click(function(event) {
+            event.preventDefault();
+            $('#inlineListForm').slideToggle(); 
+        });
+
+        $('#cancelInlineForm').click(function() {
+            $('#inlineListForm').slideUp();
+        });
+
+        $('#addListInlineForm').on('submit', function(event) {
+            let listName = $('#inlineListName').val();
+            if (listName) {
+
+                return true;
+            } else {
+                event.preventDefault(); 
+                alert('List name is required.');
+            }
+        });
+        //delete implementation
+        $('.delete-btn').click(function(){
+            var listId = $(this).data('list-id');
+            var listName = $(this).data('list-name');
+
+            $('#listIdInput').val(listId);
+            $('#listName').text(listName);
+        });
+    });
+</script>
+{%endblock%}

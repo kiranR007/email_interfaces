@@ -1,0 +1,684 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	{% load static %}
+    <title>{% block title %}ICS Dashboard{% endblock %}</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="ICS Dashboard for SMS, RCS, and Email Marketing services" />
+    <meta name="keywords" content="ICS, SMS marketing, RCS, Email marketing, dashboard" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{% block og_title %}ICS Dashboard{% endblock %}" />
+    <meta property="og:url" content="{% block og_url %}dashboard{% endblock %}" />
+    <meta property="og:site_name" content="ICS Dashboard" />
+    <link rel="canonical" href="http://index.html" />
+	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'assets/media/logos/favicon.ico' %}" />
+    <link
+		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+		rel="stylesheet">
+    <link href="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/plugins/custom/datatables/datatables.bundle.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/style.bundle.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'assets/css/daterangepicker.css' %}" />
+	<script src="{% static 'assets/plugins/global/plugins.bundle.js' %}"></script>
+    <script src="{% static 'assets/js/scripts.bundle.js' %}"></script>
+
+    <script src="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.js' %}"></script>
+    <script src="{% static 'assets/plugins/custom/datatables/datatables.bundle.js' %}"></script>
+    <script src="{% static 'assets/js/dashboard.js' %}"></script>
+
+    <script src="{% static 'assets/js/widgets.bundle.js' %}"></script>
+    <script src="{% static 'assets/js/custom/widgets.js' %}"></script>
+    <script src="{% static 'assets/js/custom/apps/chat/chat.js' %}"></script>
+    <script src="{% static 'assets/js/custom/utilities/modals/upgrade-plan.js' %}"></script>
+    <script src="{% static 'assets/js/custom/utilities/modals/users-search.js' %}"></script>
+    <script src="{% static 'assets/js/custom/moment.js' %}"></script>
+    <script src="{% static 'assets/js/custom/daterangepicker.js' %}"></script>
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/continentsLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body id="kt_app_body" data-kt-app-header-fixed="true" data-kt-app-header-fixed-mobile="true"
+	data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true"
+	data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true"
+	data-kt-app-sidebar-push-footer="true" class="app-default">
+	<script>var defaultThemeMode = "light"; var themeMode; if (document.documentElement) { if (document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if (localStorage.getItem("data-bs-theme") !== null) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
+
+	<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+		<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
+			<div id="kt_app_header" class="app-header">
+				<div class="app-container container-fluid d-flex align-items-stretch flex-stack"
+					id="kt_app_header_container">
+					<div class="d-flex align-items-center d-block d-lg-none ms-n3" title="Show sidebar menu">
+						<div class="btn btn-icon btn-active-color-primary w-35px h-35px me-2"
+							id="kt_app_sidebar_mobile_toggle">
+							<i class="ki-outline ki-abstract-14 fs-2"></i>
+						</div>
+						<a href="#">
+							<img alt="Logo" src="{%static 'assets/media/logos/222.png' %}" class="h-20px" />
+						</a>
+					</div>
+					<div class="app-navbar flex-lg-grow-1" id="kt_app_header_navbar">
+						<div class="app-navbar-item d-flex align-items-centre flex-lg-grow-1">
+							<div class="menu-item ">
+								<div class="header-menu d-none d-lg-flex flex-column flex-lg-row gap-2">
+									<a class="menu-link active" href="apps/projects/project.html">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M17 20.5H7c-3 0-5-1.5-5-5v-7c0-3.5 2-5 5-5h10c3 0 5 1.5 5 5v7c0 3.5-2 5-5 5z"
+													fill="#038EDC" />
+													<path
+													d="M11.999 12.875a3.757 3.757 0 0 1-2.343-.789l-3.125-2.5a.75.75 0 0 1 .936-1.171l3.126 2.5a2.39 2.39 0 0 0 2.811 0l3.127-2.5a.75.75 0 1 1 .936 1.17l-3.126 2.501c-.67.52-1.495.798-2.342.789z"
+													fill="#fff" />
+											</svg>
+										</span>
+										<span
+											class="menu-title  text-gray fs-14  d-flex align-items-center line-height-normal  ">Email</span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="app-navbar-item ms-1 ms-md-5" id="kt_header_user_menu_toggle">
+							<div class="cursor-pointer symbol symbol-circle symbol-35px symbol-md-45px"
+								data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
+								data-kt-menu-placement="bottom-end">
+								<img class="me-2" src="{%static 'assets/images/avatars.png' %}" alt="user" />
+								{%if request.session.email%}
+									<label class="fs-base d-none d-lg-inline-flex cursor-pointer me-2 user-name">{{ request.session.email }}</label>
+								{%else%}
+									<label class="fs-base d-none d-lg-inline-flex cursor-pointer me-2 user-name">Admin</label>
+								{% endif %}
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<g clip-path="url(#1gjteohoha)">
+										<path
+											d="M10.357 12.748c.005-.007.007-.015.012-.021l3.637-4.018a.626.626 0 0 0-.007-.823.488.488 0 0 0-.37-.177H6.355a.494.494 0 0 0-.376.183l-.002-.002a.626.626 0 0 0 0 .819l3.644 4.039a.483.483 0 0 0 .736 0z"
+											fill="#555B6D" />
+									</g>
+									<defs>
+										<clipPath id="1gjteohoha">
+											<path fill="#fff" d="M0 0h20v20H0z" />
+										</clipPath>
+									</defs>
+								</svg>
+							</div>
+
+							<!--begin::User account menu-->
+							<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
+								data-kt-menu="true">
+								<!--begin::Menu item-->
+								<div class="menu-item px-3">
+									<div class="menu-content d-flex align-items-center px-3">
+										<!--begin::Avatar-->
+										<div class="symbol symbol-50px me-5">
+											<img alt="Logo" src="{%static 'assets/images/avatars.png' %}" />
+										</div>
+										<div class="d-flex flex-column">
+											<div class="fw-bold d-flex align-items-center fs-5">
+												<span
+													class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ request.session.email }} Pro</span>
+											</div>
+											{% comment %} <a href="#"
+												class="fw-semibold text-muted text-hover-primary fs-7">max@Admin
+												LLP.com</a>{% endcomment %}
+										</div> 
+									</div>
+								</div>
+								<div class="separator my-2"></div>
+								{% comment %} <div class="menu-item px-5">
+									<a href="account/overview.html" class="menu-link px-5">My Profile</a>
+								</div> {% endcomment %}
+								{% comment %} <div class="menu-item px-5">
+									<a href="apps/projects/list.html" class="menu-link px-5">
+										<span class="menu-text">My Projects</span>
+										<span class="menu-badge">
+											<span class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
+										</span>
+									</a>
+								</div> 
+								<div class="menu-item px-5 my-1">
+									<a href="account/settings.html" class="menu-link px-5">Account Settings</a>
+								</div>{% endcomment %}
+								<div class="menu-item px-5">
+									<a href="{% url 'logout' %}" class="menu-link px-5">Sign
+										Out</a>
+								</div>
+							</div>
+						</div>
+						<div class="app-navbar-item d-flex align-items-center d-lg-none ms-1 me-n3">
+							<a href="#" class="btn btn-icon btn-color-gray-500 btn-active-color-primary w-35px h-35px"
+								id="kt_app_header_menu_toggle">
+								<i class="ki-outline ki-text-align-left fs-1"></i> </a>
+						</div>
+					</div>
+					<div class="app-navbar-separator separator d-none d-lg-flex"></div>
+				</div>
+			</div>
+			<div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+				<div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true"
+					data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}"
+					data-kt-drawer-overlay="true" data-kt-drawer-width="250px" data-kt-drawer-direction="start"
+					data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
+					<div class="app-sidebar-header d-flex flex-stack d-none d-lg-flex  " id="kt_app_sidebar_header">
+						<a href="index.html" class="app-sidebar-logo">
+							<img alt="Logo" src="{%static 'assets/media/logos/222.png' %}"
+								class="h-40px d-none d-sm-inline app-sidebar-logo-default theme-light-show" />
+							<img alt="Logo" src="{%static 'assets/media/logos/222.png '%}"
+								class="h-40px h-lg-25px theme-dark-show" />
+						</a>
+						<div id="kt_app_sidebar_toggle"
+							class="app-sidebar-toggle btn btn-sm btn-icon bg-light btn-color-gray-700 btn-active-color-primary d-none d-lg-flex rotate"
+							data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
+							data-kt-toggle-name="app-sidebar-minimize">
+
+							<svg width="32" height="32" class=" rotate-180" viewBox="0 0 32 32" fill="none"
+								xmlns="http://www.w3.org/2000/svg">
+								<path d="M8.5 16h15m-15-5h15m-15 10h15" stroke="#1F1D32" stroke-width="2"
+									stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</div>
+					</div>
+					<div class="app-sidebar-navs flex-column-fluid pb-6" id="kt_app_sidebar_navs">
+						<div id="kt_app_sidebar_navs_wrappers" class="app-sidebar-wrapper hover-scroll-y mb-2"
+							data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+							data-kt-scroll-dependencies="#kt_app_sidebar_header"
+							data-kt-scroll-wrappers="#kt_app_sidebar_navs" data-kt-scroll-offset="5px">
+							<div class="app-sidebar-menu-secondary menu menu-rounded menu-column mb-6">
+							</div>
+							<div id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false"
+								class="app-sidebar-menu-secondary menu menu-column menu-rounded menu-sub-indention menu-state-bullet-primary">
+								{% comment %} <div class="menu-item">
+									<!--begin::Menu link-->
+									<a class="menu-link active" href="{% url 'dashboard' %}">
+										<!--begin::Bullet-->
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<g clip-path="url(#lulbp8yc4a)">
+													<path
+														d="M4 13h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zm0 8h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm10 0h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zM13 4v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1z"
+														fill="#038EDC" />
+												</g>
+												<defs>
+													<clipPath id="lulbp8yc4a">
+														<path fill="#fff" d="M0 0h24v24H0z" />
+													</clipPath>
+												</defs>
+											</svg>
+										</span>
+										<!--end::Bullet-->
+										<!--begin::Title-->
+										<span class="menu-title">Dashboard</span>
+										<!--end::Title-->
+									</a>
+									<!--end::Menu link-->
+								</div> {% endcomment %}
+
+								<!--begin:Menu item-->
+								{% comment %} <div data-kt-menu-trigger="click" class="menu-item here  menu-accordion">
+									<!--begin:Menu link-->
+									<span class="menu-link">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M17 20.5H7c-3 0-5-1.5-5-5v-7c0-3.5 2-5 5-5h10c3 0 5 1.5 5 5v7c0 3.5-2 5-5 5z"
+													fill="#787A82" />
+												<path
+													d="M11.999 12.875a3.757 3.757 0 0 1-2.343-.789l-3.125-2.5a.75.75 0 0 1 .936-1.171l3.126 2.5a2.39 2.39 0 0 0 2.811 0l3.127-2.5a.75.75 0 1 1 .936 1.17l-3.126 2.501c-.67.52-1.495.798-2.342.789z"
+													fill="#fff" />
+											</svg>
+										</span>
+										<span class="menu-title">Campaigns</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<!--end:Menu link-->
+									<!--begin:Menu sub-->
+									<div class="menu-sub menu-sub-accordion">
+										<!--begin:Menu item-->
+										<div class="menu-item">
+											<!--begin:Menu link-->
+											<a class="menu-link active" href="{% url 'all_campaigns' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">View all Campaign </span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<!--begin:Menu link-->
+											<a class="menu-link active" href="{% url 'create_campaign' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">New Campaaign </span>
+											</a>
+										</div>
+									</div>
+									
+								</div> {% endcomment %}
+							
+								{% comment %} <div data-kt-menu-trigger="click" class="menu-item here  menu-accordion">
+									<!--begin:Menu link-->
+									<span class="menu-link">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<g clip-path="url(#2glp0jqf8a)" fill="#787A82">
+													<path
+														d="M11.651 18.978a6.6 6.6 0 0 1 10.18-5.542c.008-.49.011-1.01.011-1.574 0-2.894-.098-4.7-.293-6.572h.028A5.596 5.596 0 0 0 17.781.553a5.595 5.595 0 0 0-1.2-.261l-.038-.004C14.986.128 14.736 0 11.453 0 8.171 0 7.64.128 6.084.29l-.039.004c-.428.045-.85.14-1.256.282V.555A5.6 5.6 0 0 0 1.02 5.279C.826 7.154.727 8.962.727 11.862c0 2.9.099 4.709.294 6.584a5.606 5.606 0 0 0 4.996 4.995l.039.005c1.556.162 1.806.29 5.089.29 1.087 0 1.875-.014 2.493-.04a6.579 6.579 0 0 1-1.987-4.718zM6.167 6.241H16.4a1.117 1.117 0 0 1 0 2.234H6.17a1.117 1.117 0 0 1 0-2.234h-.003zm0 7.011a1.117 1.117 0 0 1 0-2.233h5.836a1.117 1.117 0 1 1 0 2.233H6.167z" />
+													<path
+														d="M18.248 13.957a5.022 5.022 0 1 0 0 10.043 5.022 5.022 0 0 0 0-10.043zm1.99 5.757h-2.09a.598.598 0 0 1-.597-.598v-3.21a.597.597 0 1 1 1.195 0v2.612h1.493a.598.598 0 0 1 0 1.196z" />
+												</g>
+												<defs>
+													<clipPath id="2glp0jqf8a">
+														<path fill="#fff" d="M0 0h24v24H0z" />
+													</clipPath>
+												</defs>
+											</svg>
+										</span>
+										<span class="menu-title">List</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<div class="menu-sub menu-sub-accordion">
+										<div class="menu-item">
+											<a class="menu-link active" href="{% url 'all_list' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">All Lists </span>
+											</a>
+										</div>	
+									</div>	
+								</div>  {% endcomment %}
+
+
+								<div class="menu-item">
+									<!-- Direct button linking to 'all_list' page -->
+									<a class="menu-link" href="{% url 'all_list' %}">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<g clip-path="url(#2glp0jqf8a)" fill="#787A82">
+													<path
+														d="M11.651 18.978a6.6 6.6 0 0 1 10.18-5.542c.008-.49.011-1.01.011-1.574 0-2.894-.098-4.7-.293-6.572h.028A5.596 5.596 0 0 0 17.781.553a5.595 5.595 0 0 0-1.2-.261l-.038-.004C14.986.128 14.736 0 11.453 0 8.171 0 7.64.128 6.084.29l-.039.004c-.428.045-.85.14-1.256.282V.555A5.6 5.6 0 0 0 1.02 5.279C.826 7.154.727 8.962.727 11.862c0 2.9.099 4.709.294 6.584a5.606 5.606 0 0 0 4.996 4.995l.039.005c1.556.162 1.806.29 5.089.29 1.087 0 1.875-.014 2.493-.04a6.579 6.579 0 0 1-1.987-4.718zM6.167 6.241H16.4a1.117 1.117 0 0 1 0 2.234H6.17a1.117 1.117 0 0 1 0-2.234h-.003zm0 7.011a1.117 1.117 0 0 1 0-2.233h5.836a1.117 1.117 0 1 1 0 2.233H6.167z" />
+													<path
+														d="M18.248 13.957a5.022 5.022 0 1 0 0 10.043 5.022 5.022 0 0 0 0-10.043zm1.99 5.757h-2.09a.598.598 0 0 1-.597-.598v-3.21a.597.597 0 1 1 1.195 0v2.612h1.493a.598.598 0 0 1 0 1.196z" />
+												</g>
+												<defs>
+													<clipPath id="2glp0jqf8a">
+														<path fill="#fff" d="M0 0h24v24H0z" />
+													</clipPath>
+												</defs>
+											</svg>
+										</span>
+										<span class="menu-title">List</span>
+									</a>
+								</div>
+								
+
+
+								{% comment %} <div data-kt-menu-trigger="click" class="menu-item here  menu-accordion">
+									<!--begin:Menu link-->
+									<span class="menu-link">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<path fill-rule="evenodd" clip-rule="evenodd"
+													d="M1.25 6A4.75 4.75 0 0 1 6 1.25h12A4.75 4.75 0 0 1 22.75 6v12A4.75 4.75 0 0 1 18 22.75H6A4.75 4.75 0 0 1 1.25 18V6zm13.28 4.53a.75.75 0 1 0-1.06-1.06l-4 4a.75.75 0 1 0 1.06 1.06l4-4zm1.94-3a2.078 2.078 0 0 0-2.94 0l-2 2a.75.75 0 1 1-1.06-1.06l2-2a3.578 3.578 0 1 1 5.06 5.06l-2 2a.75.75 0 1 1-1.06-1.06l2-2a2.079 2.079 0 0 0 0-2.94zm-6 8.94a2.079 2.079 0 0 1-2.94-2.94l2-2a.75.75 0 1 0-1.06-1.06l-2 2a3.578 3.578 0 1 0 5.06 5.06l2-2a.75.75 0 1 0-1.06-1.06l-2 2z"
+													fill="#787A82" />
+											</svg>
+										</span>
+										<span class="menu-title">Templates</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<!--end:Menu link-->
+									<!--begin:Menu sub-->
+									<div class="menu-sub menu-sub-accordion">
+										<!--begin:Menu item-->
+										<div class="menu-item">
+											<!--begin:Menu link-->
+											<a class="menu-link active" href="{% url 'all_templates' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">All Templates</span>
+											</a>
+											<!--end:Menu link-->
+										</div>
+									</div>
+								</div>  {% endcomment %}
+
+								<div class="menu-item">
+									<!-- Direct button linking to 'all templates' page -->
+									<a class="menu-link" href="{% url 'all_templates' %}">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path fill-rule="evenodd" clip-rule="evenodd"
+													d="M1.25 6A4.75 4.75 0 0 1 6 1.25h12A4.75 4.75 0 0 1 22.75 6v12A4.75 4.75 0 0 1 18 22.75H6A4.75 4.75 0 0 1 1.25 18V6zm13.28 4.53a.75.75 0 1 0-1.06-1.06l-4 4a.75.75 0 1 0 1.06 1.06l4-4zm1.94-3a2.078 2.078 0 0 0-2.94 0l-2 2a.75.75 0 1 1-1.06-1.06l2-2a3.578 3.578 0 1 1 5.06 5.06l-2 2a.75.75 0 1 1-1.06-1.06l2-2a2.079 2.079 0 0 0 0-2.94zm-6 8.94a2.079 2.079 0 0 1-2.94-2.94l2-2a.75.75 0 1 0-1.06-1.06l-2 2a3.578 3.578 0 1 0 5.06 5.06l2-2a.75.75 0 1 0-1.06-1.06l-2 2z"
+													fill="#787A82" />
+											</svg>
+										</span>
+										<span class="menu-title">Templates</span>
+									</a>
+								</div>
+								
+
+
+								<div data-kt-menu-trigger="click" class="menu-item here  menu-accordion">
+									<!--begin:Menu link-->
+									<span class="menu-link">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M17 20.5H7c-3 0-5-1.5-5-5v-7c0-3.5 2-5 5-5h10c3 0 5 1.5 5 5v7c0 3.5-2 5-5 5z"
+													fill="#787A82" />
+												<path
+													d="M11.999 12.875a3.757 3.757 0 0 1-2.343-.789l-3.125-2.5a.75.75 0 0 1 .936-1.171l3.126 2.5a2.39 2.39 0 0 0 2.811 0l3.127-2.5a.75.75 0 1 1 .936 1.17l-3.126 2.501c-.67.52-1.495.798-2.342.789z"
+													fill="#fff" />
+											</svg>
+										</span>
+										<span class="menu-title">Campaigns</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<!--end:Menu link-->
+									<!--begin:Menu sub-->
+									<div class="menu-sub menu-sub-accordion">
+										<!--begin:Menu item-->
+										<div class="menu-item">
+											<!--begin:Menu link-->
+											<a class="menu-link active" href="{% url 'all_campaigns' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">View all Campaign </span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<!--begin:Menu link-->
+											<a class="menu-link active" href="{% url 'create_campaign' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">New Campaaign </span>
+											</a>
+										</div>
+									</div>
+									
+								</div>
+
+								{% comment %} api Consumption {% endcomment %}
+								{% comment %} <div data-kt-menu-trigger="click" class="menu-item here  menu-accordion">
+									<!--begin:Menu link-->
+									<span class="menu-link">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<path fill-rule="evenodd" clip-rule="evenodd"
+													d="M1.25 6A4.75 4.75 0 0 1 6 1.25h12A4.75 4.75 0 0 1 22.75 6v12A4.75 4.75 0 0 1 18 22.75H6A4.75 4.75 0 0 1 1.25 18V6zm13.28 4.53a.75.75 0 1 0-1.06-1.06l-4 4a.75.75 0 1 0 1.06 1.06l4-4zm1.94-3a2.078 2.078 0 0 0-2.94 0l-2 2a.75.75 0 1 1-1.06-1.06l2-2a3.578 3.578 0 1 1 5.06 5.06l-2 2a.75.75 0 1 1-1.06-1.06l2-2a2.079 2.079 0 0 0 0-2.94zm-6 8.94a2.079 2.079 0 0 1-2.94-2.94l2-2a.75.75 0 1 0-1.06-1.06l-2 2a3.578 3.578 0 1 0 5.06 5.06l2-2a.75.75 0 1 0-1.06-1.06l-2 2z"
+													fill="#787A82" />
+											</svg>
+										</span>
+										<span class="menu-title">API</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<!--end:Menu link-->
+									<!--begin:Menu sub-->
+									<div class="menu-sub menu-sub-accordion">
+										<!--begin:Menu item-->
+										<div class="menu-item">
+											<!--begin:Menu link-->
+											<a class="menu-link active" href="{% url 'api_consumptions' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">API Consumption</span>
+											</a>
+										</div>
+										
+									</div>
+									
+								</div> {% endcomment %}
+								<div class="menu-item">
+									<!-- Direct button linking to 'api_consumptions' page -->
+									<a class="menu-link" href="{% url 'api_consumptions' %}">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path fill-rule="evenodd" clip-rule="evenodd"
+													d="M1.25 6A4.75 4.75 0 0 1 6 1.25h12A4.75 4.75 0 0 1 22.75 6v12A4.75 4.75 0 0 1 18 22.75H6A4.75 4.75 0 0 1 1.25 18V6zm13.28 4.53a.75.75 0 1 0-1.06-1.06l-4 4a.75.75 0 1 0 1.06 1.06l4-4zm1.94-3a2.078 2.078 0 0 0-2.94 0l-2 2a.75.75 0 1 1-1.06-1.06l2-2a3.578 3.578 0 1 1 5.06 5.06l-2 2a.75.75 0 1 1-1.06-1.06l2-2a2.079 2.079 0 0 0 0-2.94zm-6 8.94a2.079 2.079 0 0 1-2.94-2.94l2-2a.75.75 0 1 0-1.06-1.06l-2 2a3.578 3.578 0 1 0 5.06 5.06l2-2a.75.75 0 1 0-1.06-1.06l-2 2z"
+													fill="#787A82" />
+											</svg>
+										</span>
+										<span class="menu-title">API Consumption</span>
+									</a>
+								</div>
+								
+								{% comment %} Logs download {% endcomment %}
+								<div class="menu-item">
+									<!-- Direct button linking to 'logs_download' page -->
+									<a class="menu-link" href="{% url 'logs_download' %}">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M11.29 15.63v4.461a2.914 2.914 0 0 1-2.914 2.914H3.914A2.92 2.92 0 0 1 1 20.091V15.63a2.914 2.914 0 0 1 2.914-2.915h4.462a2.914 2.914 0 0 1 2.914 2.915zM8.376 1H3.914A2.92 2.92 0 0 0 1 3.914v4.467a2.92 2.92 0 0 0 2.914 2.914h4.462a2.914 2.914 0 0 0 2.914-2.914V3.914A2.914 2.914 0 0 0 8.376 1zm11.71 11.715h-4.462a2.914 2.914 0 0 0-2.914 2.915v4.461a2.92 2.92 0 0 0 2.914 2.914h4.462A2.914 2.914 0 0 0 23 20.091V15.63a2.916 2.916 0 0 0-2.914-2.915zM13.44 4.614l.742-1.357c.302-.074.986-.143 1.192.074l1.118-.683c-.1-.281.281-.859.482-1.092l1.548-.037c.217.228.62.784.53 1.07l1.155.631c.19-.228.88-.19 1.187-.127l.805 1.32c-.09.296-.371.927-.662.995l.026 1.31c.297.052.61.667.71.964l-.742 1.356c-.307.074-.99.143-1.192-.074l-1.123.683c.1.281-.276.859-.482 1.092l-1.542.037c-.218-.228-.62-.784-.536-1.07l-1.15-.63c-.195.227-.879.19-1.191.132l-.8-1.32c.09-.302.37-.932.662-1.001l-.032-1.309c-.292-.053-.604-.668-.705-.964zm3.757 2.74a1.374 1.374 0 1 0 1.31-2.416 1.374 1.374 0 0 0-1.31 2.415z"
+													fill="#787A82" />
+											</svg>
+										</span>
+										<span class="menu-title">Logs Reports</span>
+									</a>
+								</div>								
+								{% comment %} <div data-kt-menu-trigger="click" class="menu-item here  menu-accordion">
+									<!--begin:Menu link-->
+									<span class="menu-link">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M11.29 15.63v4.461a2.914 2.914 0 0 1-2.914 2.914H3.914A2.92 2.92 0 0 1 1 20.091V15.63a2.914 2.914 0 0 1 2.914-2.915h4.462a2.914 2.914 0 0 1 2.914 2.915zM8.376 1H3.914A2.92 2.92 0 0 0 1 3.914v4.467a2.92 2.92 0 0 0 2.914 2.914h4.462a2.914 2.914 0 0 0 2.914-2.914V3.914A2.914 2.914 0 0 0 8.376 1zm11.71 11.715h-4.462a2.914 2.914 0 0 0-2.914 2.915v4.461a2.92 2.92 0 0 0 2.914 2.914h4.462A2.914 2.914 0 0 0 23 20.091V15.63a2.916 2.916 0 0 0-2.914-2.915zM13.44 4.614l.742-1.357c.302-.074.986-.143 1.192.074l1.118-.683c-.1-.281.281-.859.482-1.092l1.548-.037c.217.228.62.784.53 1.07l1.155.631c.19-.228.88-.19 1.187-.127l.805 1.32c-.09.296-.371.927-.662.995l.026 1.31c.297.052.61.667.71.964l-.742 1.356c-.307.074-.99.143-1.192-.074l-1.123.683c.1.281-.276.859-.482 1.092l-1.542.037c-.218-.228-.62-.784-.536-1.07l-1.15-.63c-.195.227-.879.19-1.191.132l-.8-1.32c.09-.302.37-.932.662-1.001l-.032-1.309c-.292-.053-.604-.668-.705-.964zm3.757 2.74a1.374 1.374 0 1 0 1.31-2.416 1.374 1.374 0 0 0-1.31 2.415z"
+													fill="#787A82" />
+											</svg>
+										</span>
+										<span class="menu-title">Reports</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<!--end:Menu link-->
+									<!--begin:Menu sub-->
+									<div class="menu-sub menu-sub-accordion">
+										<!--begin:Menu item-->
+										<div class="menu-item">
+											<!--begin:Menu link-->
+											<a class="menu-link active" href="{% url 'logs_download' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Logs Reports</span>
+											</a>
+										</div>
+										
+									</div>
+									
+								</div> {% endcomment %}
+
+
+
+
+
+
+								{% comment %} <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+									<!--begin:Menu link-->
+									<span class="menu-link">
+										<span class="menu-icon">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+												xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M11.29 15.63v4.461a2.914 2.914 0 0 1-2.914 2.914H3.914A2.92 2.92 0 0 1 1 20.091V15.63a2.914 2.914 0 0 1 2.914-2.915h4.462a2.914 2.914 0 0 1 2.914 2.915zM8.376 1H3.914A2.92 2.92 0 0 0 1 3.914v4.467a2.92 2.92 0 0 0 2.914 2.914h4.462a2.914 2.914 0 0 0 2.914-2.914V3.914A2.914 2.914 0 0 0 8.376 1zm11.71 11.715h-4.462a2.914 2.914 0 0 0-2.914 2.915v4.461a2.92 2.92 0 0 0 2.914 2.914h4.462A2.914 2.914 0 0 0 23 20.091V15.63a2.916 2.916 0 0 0-2.914-2.915zM13.44 4.614l.742-1.357c.302-.074.986-.143 1.192.074l1.118-.683c-.1-.281.281-.859.482-1.092l1.548-.037c.217.228.62.784.53 1.07l1.155.631c.19-.228.88-.19 1.187-.127l.805 1.32c-.09.296-.371.927-.662.995l.026 1.31c.297.052.61.667.71.964l-.742 1.356c-.307.074-.99.143-1.192-.074l-1.123.683c.1.281-.276.859-.482 1.092l-1.542.037c-.218-.228-.62-.784-.536-1.07l-1.15-.63c-.195.227-.879.19-1.191.132l-.8-1.32c.09-.302.37-.932.662-1.001l-.032-1.309c-.292-.053-.604-.668-.705-.964zm3.757 2.74a1.374 1.374 0 1 0 1.31-2.416 1.374 1.374 0 0 0-1.31 2.415z"
+													fill="#787A82" />
+											</svg>
+										</span>
+										<span class="menu-title">Reports</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<div class="menu-sub menu-sub-accordion">
+										<div class="menu-item">
+											<a class="menu-link"
+												href="{% url 'api_consumptions' %}"
+												target="_blank" title="Check out over 200 in-house components"
+												data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
+												data-bs-placement="right">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Logs Reports</span>
+											</a>
+
+										</div>
+										
+									</div>
+								</div> {% endcomment %}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+					
+                    
+                    
+                    
+                    
+                    {%block content%}
+                    {%endblock%}
+                    
+                    
+                    <!--here we have write a block content-->
+
+
+
+
+					<div id="kt_app_footer" class="app-footer">
+						<!--begin::Footer container-->
+						<div class="container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack">
+							<!--begin::Copyright-->
+							<div class="text-gray-dark order-2 order-md-1">
+								<span class="me-1 fs-14">© Copyright 2024.</span>
+							</div>
+							<!--end::Copyright-->
+							<!--begin::Menu-->
+							<ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+								<li class="menu-item">
+									<a href="#" target="_blank" class="menu-link px-2">Version 2.1.P40</a>
+								</li>
+							</ul>
+							<!--end::Menu-->
+						</div>
+						<!--end::Footer container-->
+					</div>
+					<!--end::Footer-->
+				</div>
+				<!--end:::Main-->
+			</div>
+			<!--end::Wrapper-->
+		</div>
+		<!--end::Page-->
+	</div>
+
+	<script>
+		// set the dropzone container id
+		const id = "#kt_dropzonejs_example_3";
+		const dropzone = document.querySelector(id);
+
+		// set the preview element template
+		var previewNode = dropzone.querySelector(".dropzone-item");
+		previewNode.id = "";
+		var previewTemplate = previewNode.parentNode.innerHTML;
+		previewNode.parentNode.removeChild(previewNode);
+
+		var myDropzone = new Dropzone(id, { // Make the whole body a dropzone
+			url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
+			parallelUploads: 20,
+			maxFilesize: 1, // Max filesize in MB
+			previewTemplate: previewTemplate,
+			previewsContainer: id + " .dropzone-items", // Define the container to display the previews
+			clickable: id + " .dropzone-select" // Define the element that should be used as click trigger to select files.
+		});
+
+		myDropzone.on("addedfile", function (file) {
+			// Hookup the start button
+			const dropzoneItems = dropzone.querySelectorAll('.dropzone-item');
+			dropzoneItems.forEach(dropzoneItem => {
+				dropzoneItem.style.display = '';
+			});
+		});
+
+		// Update the total progress bar
+		myDropzone.on("totaluploadprogress", function (progress) {
+			const progressBars = dropzone.querySelectorAll('.progress-bar');
+			progressBars.forEach(progressBar => {
+				progressBar.style.width = progress + "%";
+			});
+		});
+
+		myDropzone.on("sending", function (file) {
+			// Show the total progress bar when upload starts
+			const progressBars = dropzone.querySelectorAll('.progress-bar');
+			progressBars.forEach(progressBar => {
+				progressBar.style.opacity = "1";
+			});
+		});
+
+		// Hide the total progress bar when nothing"s uploading anymore
+		myDropzone.on("complete", function (progress) {
+			const progressBars = dropzone.querySelectorAll('.dz-complete');
+
+			setTimeout(function () {
+				progressBars.forEach(progressBar => {
+					progressBar.querySelector('.progress-bar').style.opacity = "0";
+					progressBar.querySelector('.progress').style.opacity = "0";
+				});
+			}, 300);
+		});
+
+
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#startDate input').daterangepicker({
+				singleDatePicker: true,
+				timePicker: true, // Allows time selection
+				timePicker24Hour: true, // 24-hour format
+				locale: {
+					format: 'DD-MM-YYYY HH:mm:ss' // Date format
+				},
+				startDate: moment().subtract(0, 'days')
+			});
+		});
+	</script>
+
+	<!--end::Custom Javascript-->
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+{%extends 'demosendy/base.html'%}
+{%block title%}Campaigns{%endblock%}
+{%block content%}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <p>List ID: {{campaign_id}}</p>
+            <p>List Name: {{campaign_name}}
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+</style>
+{%endblock%}

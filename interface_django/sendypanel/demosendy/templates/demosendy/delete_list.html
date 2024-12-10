@@ -1,0 +1,88 @@
+{%extends 'demosendy/base.html'%}
+{%block title%}Delete List{%endblock%}
+{%block content%}
+<!-- Delete Button (Example for Each List Item) -->
+<!-- The data-list-id and data-list-name will store the list information to be shown in the modal -->
+ <div class="row mt-5">
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" data-list-id="{{ list.encrypted_list_id }}" data-list-name="{{ list.list_name }}">
+            Delete
+        </button>
+    </div>
+ </div>
+
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                <p id="deleteMessage">Are you sure you want to delete the list "<span id="listName"></span>"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" action="{% url 'delete_list' lists.list_id %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="listIdInput" name="list_id" value="{{ lists.list_id }}">
+                    <button type="submit" class="btn btn-danger">DELETE</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top:20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+</style>
+<script>
+// When a delete button is clicked
+document.addEventListener("DOMContentLoaded", function () {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    const listNameSpan = document.getElementById("listName");
+    const listIdInput = document.getElementById("listIdInput");
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const listName = button.getAttribute("data-list-name");
+            const listId = button.getAttribute("data-list-id");
+
+            // Set the list name in the modal message
+            listNameSpan.textContent = listName;
+
+            // Set the list ID in the hidden input field of the form
+            listIdInput.value = listId;
+        });
+    });
+});
+</script>
+
+
+{%endblock%}

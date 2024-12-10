@@ -1,0 +1,224 @@
+{%extends 'demosendy/base.html'%}
+{%block title%}Campaign{%endblock%}
+{%block content%}
+
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-fluid">
+                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-2 w-100 mb-6"> 
+                    <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
+                    </div>
+                    <div class="d-flex btn-action flex-wrap align-items-center gap-2 gap-lg-3">
+                        <a 
+                            class="btn min-w-175px btn-flex btn-primary h-40px fs-14 fw-bold text-center justify-content-center "
+                            href="{% url 'create_campaign' %}" >
+
+                            <span class="me-2">
+                                <svg fill="#fff" height="20px" width="20px" version="1.1" id="Layer_1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"
+                                    xml:space="preserve">
+                                    <g>
+                                        <g>
+                                            <path d="M256,0C114.84,0,0,114.842,0,256s114.84,256,256,256s256-114.842,256-256S397.16,0,256,0z M256,462.452
+                                        c-113.837,0-206.452-92.614-206.452-206.452S142.163,49.548,256,49.548S462.452,142.163,462.452,256S369.837,462.452,256,462.452z
+                                        " />
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <polygon points="280.774,231.226 280.774,140.387 231.226,140.387 231.226,231.226 140.387,231.226 140.387,280.774 
+                                        231.226,280.774 231.226,371.613 280.774,371.613 280.774,280.774 371.613,280.774 371.613,231.226 		" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </span>
+                            Add New
+                            Campaign</a>
+                    </div>
+                </div>
+                <div class="card mb-5 mb-xl-8">
+                    <div
+                        class="card-header flex-wrap table-header py-2 min-h-auto px-4 align-items-center  p-0">
+                        <h3 class="mb-3  mb-lg-0 align-items-start flex-column">
+                            <span class="card-label fw-bold fs-5 text-black">All Campaigns</span>
+                        </h3>
+                            <form method="GET" action="{% url 'all_campaigns' %}">
+                            <div
+                                class="custom-search d-flex flex-row-reverse align-items-center position-relative mb-3 mb-lg-0">
+                                <input id="customSearchBox" type="text" name="search"
+                                    data-kt-inbox-listing-filter="search"
+                                    class="form-control form-control-sm form-control min-h-auto pe-11 min-w-lg-400px"
+                                    placeholder="Search by Campaign Name">
+                                <i class="ki-outline ki-magnifier fs-3 position-absolute me-4"></i>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0 mt-4">
+                        <div class="table-responsive min-h-350px">
+                            <table id="kt_datatable_zero_configuration"
+                                class="table table-bordered  gy-5">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-muted">
+                                        
+                                        <th class="min-w-100px">Campaign ID</th>
+                                        <th class="min-w-150px">Campaign Name</th>
+                                      
+                                        <th class="min-w-100px">Date/Time</th>
+                                        {% comment %} <th class="min-w-150px">Edit</th> {% endcomment %}
+                                        <th class="min-w-100px">Delete</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if filter_campaigns %}
+                                        {% for campaign in filter_campaigns %}
+                                            <tr>
+                                                <td>{{ campaign.campaign_id }}</td>
+                                                <td><a href="{% url 'campaign_details' campaign.campaign_id %}" class="fs-14 fw-bold text-primary">{{campaign.title}}</a></td>
+                                                <td>{{campaign.created_at}}</td>
+                                                <td>
+                                                    <a href="#" class="text-danger delete-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal" data-list-id="{{ campaign.campaign_id }}"
+                                                        data-list-name="{{ campaign.title }}">
+                                                        <i class="bi bi-archive-fill"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}            
+                                    {%else%}
+                                        {%for campaign in page_obj%}
+                                            <tr>
+                                                <td>{{campaign.campaign_id}}</td>
+                                                {% comment %} <td><a href="{% url 'campaign_details' campaign.campaign_id %}" class="fs-14 fw-bold text-primary">{{campaign.title}}</a></td> {% endcomment %}
+                                                <td><a href="{% url 'campaign_details' campaign.campaign_id %}" class="fs-14 fw-bold text-primary">{{campaign.title}}</a></td>
+                                                <td>{{campaign.created_at}}</td>
+                                                {% comment %} <td><i class="bi bi-pencil-square"></td> {% endcomment %}
+                                                {% comment %} <td><a href="#" class="text-danger delete-btn" data-bS-toggle="modal"
+                                                    data-bs-target="#deleteModal" data-camapign-id="{{campaign.campaign_id}}"
+                                                    data-campaign-name="{{campaign.title}}">
+                                                    <i class="bi bi-archive-fill"></a></td> {% endcomment %}
+                                                <td>
+                                                    <a href="#" class="text-danger delete-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal" data-list-id="{{ campaign.campaign_id }}"
+                                                        data-list-name="{{ campaign.title }}">
+                                                        <i class="bi bi-archive-fill"></i>
+                                                    </a>
+                                                </td>
+                                            </tr> 
+                                        {%endfor%}
+                                    {%endif%}
+                                          
+                              </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <ul class="pagination">
+                                    <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                                      <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                      </a>
+                                    </li>
+                                
+                                    {% for page_num in page_obj.paginator.page_range %}
+                                        {%if page_num >= page_obj.number|add:'-1' and page_num <= page_obj.number|add:'1'%}
+                                            <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                            </li>
+                                        {%endif%}
+                                    {% endfor %}
+                                    
+                                   
+                                    <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                                      <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                      </a>
+                                    </li>
+                                  </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} {%if page_obj.has_previous%}
+                        <a href="?page=1">&laquo First</a>
+                        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+                    
+                    {%endif%}
+                    Page: {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+                    {% if page_obj.has_next%}
+                        <a href="?page={{page_obj.next_page_number}}">Next</a>
+                        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
+                    {%endif%} {% endcomment %}
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Campaign</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage">Are you sure you want to delete the list "<strong><span id="listName">{{title}}</span><strong>" ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                <form id="deleteForm" method="POST" action="{% url 'all_campaigns' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="listIdInput" name="campaign_id">
+                    <input type="hidden" name="delete_campaign" value="true"> 
+                    <button type="submit" class="btn btn-danger">DELETE</button>
+                </form>  
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+    .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        width: 300px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+</style>
+<script>
+    $(document).ready(function() {
+        $('.delete-btn').click(function(){
+            var listId = $(this).data('list-id');
+            var listName = $(this).data('list-name');
+
+            $('#listIdInput').val(listId);
+            $('#listName').text(listName);
+        });
+    });
+</script>
+{%endblock%}
